@@ -1,0 +1,40 @@
+package com.yourorg.rules;
+
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.java.JavaIsoVisitor;
+import org.openrewrite.java.tree.J;
+
+public class IfWithReturnBraces extends Recipe {
+
+    @Override
+    public String getDisplayName() {
+        return "Expand one-line if/return into block (S122)";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Adds braces and newlines so each statement is on its own line, fixing Sonar rule S122.";
+    }
+
+    @Override
+    public JavaIsoVisitor<ExecutionContext> getVisitor() {
+        return new JavaIsoVisitor<ExecutionContext>() {
+            @Override
+            public J.If visitIf(J.If ifStmt, ExecutionContext ctx) {
+                J.If i = super.visitIf(ifStmt, ctx);
+
+                // If body is a single-line statement (no braces) -> wrap it
+                if (!(i.getThenPart() instanceof J.Block)) {
+                    J.Block thenBlock = J.Block.create(
+                        J.Block.Kind.Braces,
+                        java.util.Collections.singletonList(i.getThenPart().withPrefix(Space.EMPTY)),
+                        null
+                    );
+                    i = i.withThenPart(thenBlock);
+                }
+                return i;
+            }
+        };
+    }
+}
