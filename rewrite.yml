@@ -1,0 +1,30 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.SonarQuickFixes
+displayName: Quick fixes for Sonar rules S112,S122,S1067,S134,S1541,S1149,S1126
+description: Auto-remediate common Sonar issues and surface hotspots for manual review.
+recipeList:
+  - org.openrewrite.staticanalysis.CodeCleanup
+  - org.openrewrite.staticanalysis.NeedBraces
+  - org.openrewrite.java.format.WrappingAndBraces
+  - org.openrewrite.java.format.OperatorWrap
+  - org.openrewrite.staticanalysis.SimplifyBooleanExpression
+  - com.yourorg.SimplifyTernaries         # wraps the Refaster-based ternary recipes
+  - org.openrewrite.staticanalysis.TernaryOperatorsShouldNotBeNested
+  - org.openrewrite.staticanalysis.SimplifyBooleanReturn
+
+  # Reduce nesting for S134
+  - org.openrewrite.staticanalysis.UnwrapElseAfterReturn
+
+  # S1149: safe built-in replacement
+  - org.openrewrite.staticanalysis.ReplaceStackWithDeque
+
+  # S112: partial, safe removal of unused/broad throws
+  - org.openrewrite.staticanalysis.UnnecessaryThrows
+
+  # S1541: analysis-only datatable so you can target worst offenders
+  - org.openrewrite.analysis.java.controlflow.search.FindCyclomaticComplexity
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.SimplifyTernaries
+recipeList:
+  - org.openrewrite.staticanalysis.SimplifyTernaryRecipes
