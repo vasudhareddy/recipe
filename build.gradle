@@ -1,0 +1,25 @@
+plugins {
+  id 'java'
+  id 'org.openrewrite.rewrite' version '7.13.0'
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+  rewrite 'org.openrewrite.recipe:rewrite-static-analysis:latest.release'
+  rewrite 'org.openrewrite:rewrite-java:latest.release'
+  // analysis tables (cyclomatic complexity)
+  rewrite 'org.openrewrite.recipe:rewrite-analysis:latest.release'
+}
+
+rewrite {
+  activeRecipe(
+    // main bundle
+    'com.yourorg.SonarQuickFixes'
+    // add any optional conversions you want, e.g.:
+    // 'com.yourorg.ReplaceStringBufferWithStringBuilder',
+    // 'com.yourorg.ReplaceVectorWithArrayList',
+    // 'com.yourorg.ReplaceHashtableWithHashMap',
+  )
+  setExportDatatables(true)
+}
