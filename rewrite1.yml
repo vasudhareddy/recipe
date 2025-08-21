@@ -1,0 +1,7 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.SonarS122Fix
+displayName: Fix Sonar S122 (one statement per line)
+description: "Expand one-line if/return into multi-line blocks with braces."
+
+recipeList:
+  - com.yourorg.rules.IfWithReturnBraces
