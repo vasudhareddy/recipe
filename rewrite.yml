@@ -1,30 +1,71 @@
 type: specs.openrewrite.org/v1beta/recipe
-name: com.yourorg.SonarQuickFixes
-displayName: Quick fixes for Sonar rules S112,S122,S1067,S134,S1541,S1149,S1126
-description: Auto-remediate common Sonar issues and surface hotspots for manual review.
+name: com.yourorg.SonarPackLimited
+displayName: Sonar-targeted fixes with available packs
+description: Covers S1126 and partial fixes for S1067/S122/S134/S112, plus S1149 conversions.
+
 recipeList:
-  - org.openrewrite.staticanalysis.CodeCleanup
-  - org.openrewrite.staticanalysis.NeedBraces
+  # ---- Formatting / helps S122 one-statement-per-line by normalizing layout ----
   - org.openrewrite.java.format.WrappingAndBraces
   - org.openrewrite.java.format.OperatorWrap
-  - org.openrewrite.staticanalysis.SimplifyBooleanExpression
-  - com.yourorg.SimplifyTernaries         # wraps the Refaster-based ternary recipes
-  - org.openrewrite.staticanalysis.TernaryOperatorsShouldNotBeNested
-  - org.openrewrite.staticanalysis.SimplifyBooleanReturn
+  - org.openrewrite.java.format.AutoFormat
+  - org.openrewrite.java.RemoveUnusedImports
 
-  # Reduce nesting for S134
-  - org.openrewrite.staticanalysis.UnwrapElseAfterReturn
+  # ---- S1126: boolean returns wrapped in if/else -> direct return ----
+  - org.openrewrite.java.cleanup.SimplifyBooleanReturn
 
-  # S1149: safe built-in replacement
-  - org.openrewrite.staticanalysis.ReplaceStackWithDeque
+  # ---- S1067: simplify complex boolean/ternary (safe reductions) ----
+  - org.openrewrite.java.cleanup.SimplifyBooleanExpression
+  - org.openrewrite.java.cleanup.UnnecessaryParentheses
+  - org.openrewrite.java.cleanup.SimplifyTernary
 
-  # S112: partial, safe removal of unused/broad throws
-  - org.openrewrite.staticanalysis.UnnecessaryThrows
+  # ---- S134: reduce nesting (common pattern: else after return/throw) ----
+  - org.openrewrite.java.cleanup.UnwrapElse
 
-  # S1541: analysis-only datatable so you can target worst offenders
-  - org.openrewrite.analysis.java.controlflow.search.FindCyclomaticComplexity
+  # ---- S112: generic exceptions (partial: remove unused/broad throws) ----
+  - org.openrewrite.java.cleanup.UnnecessaryThrows
+
+  # ---- S1149: legacy synchronized types -> modern equivalents (enable as needed) ----
+  - com.yourorg.ReplaceStackWithDeque
+  # - com.yourorg.ReplaceVectorWithArrayList
+  # - com.yourorg.ReplaceHashtableWithHashMap
+  # - com.yourorg.ReplaceStringBufferWithStringBuilder
+
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: com.yourorg.SimplifyTernaries
+name: com.yourorg.ReplaceStackWithDeque
+displayName: Replace java.util.Stack with ArrayDeque
 recipeList:
-  - org.openrewrite.staticanalysis.SimplifyTernaryRecipes
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: java.util.Stack
+      newFullyQualifiedTypeName: java.util.ArrayDeque
+      ignoreDefinition: true
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.ReplaceVectorWithArrayList
+displayName: Replace java.util.Vector with ArrayList
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: java.util.Vector
+      newFullyQualifiedTypeName: java.util.ArrayList
+      ignoreDefinition: true
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.ReplaceHashtableWithHashMap
+displayName: Replace java.util.Hashtable with HashMap
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: java.util.Hashtable
+      newFullyQualifiedTypeName: java.util.HashMap
+      ignoreDefinition: true
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.ReplaceStringBufferWithStringBuilder
+displayName: Replace StringBuffer with StringBuilder
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: java.lang.StringBuffer
+      newFullyQualifiedTypeName: java.lang.StringBuilder
+      ignoreDefinition: true
