@@ -1,0 +1,37 @@
+package com.example.recipes;
+
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.java.JavaIsoVisitor;
+import org.openrewrite.java.tree.J;
+import org.openrewrite.java.tree.Space;
+
+public class AddHeaderComment extends Recipe {
+
+    @Override
+    public String getDisplayName() {
+        return "Add header comment";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Adds a simple header comment to each class.";
+    }
+
+    @Override
+    public JavaIsoVisitor<ExecutionContext> getVisitor() {
+        return new JavaIsoVisitor<ExecutionContext>() {
+            @Override
+            public J.CompilationUnit visitCompilationUnit(J.CompilationUnit cu, ExecutionContext ctx) {
+                J.CompilationUnit c = super.visitCompilationUnit(cu, ctx);
+
+                // Only add if not already present
+                if (!c.getPrefix().getWhitespace().contains("// Added by AddHeaderComment")) {
+                    String newPrefix = "// Added by AddHeaderComment\n" + c.getPrefix().getWhitespace();
+                    c = c.withPrefix(Space.build(newPrefix));
+                }
+                return c;
+            }
+        };
+    }
+}
