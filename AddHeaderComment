@@ -1,10 +1,9 @@
-package com.example.recipes;
+package com.wellsfargo;
 
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Recipe;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.tree.J;
-import org.openrewrite.java.tree.Space;
 
 public class AddHeaderComment extends Recipe {
 
@@ -15,22 +14,25 @@ public class AddHeaderComment extends Recipe {
 
     @Override
     public String getDescription() {
-        return "Adds a simple header comment to each class.";
+        return "Always add a comment before the first class.";
     }
 
     @Override
     public JavaIsoVisitor<ExecutionContext> getVisitor() {
         return new JavaIsoVisitor<ExecutionContext>() {
             @Override
-            public J.CompilationUnit visitCompilationUnit(J.CompilationUnit cu, ExecutionContext ctx) {
-                J.CompilationUnit c = super.visitCompilationUnit(cu, ctx);
+            public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext ctx) {
+                J.ClassDeclaration cd = super.visitClassDeclaration(classDecl, ctx);
 
-                // Only add if not already present
-                if (!c.getPrefix().getWhitespace().contains("// Added by AddHeaderComment")) {
-                    String newPrefix = "// Added by AddHeaderComment\n" + c.getPrefix().getWhitespace();
-                    c = c.withPrefix(Space.build(newPrefix));
+                // Add a comment at the start of the class
+                if (cd.getComments().isEmpty()) {
+                    return cd.withComments(
+                        java.util.Collections.singletonList(
+                            new org.openrewrite.java.tree.Comment.SingleLine("// Added by AddHeaderComment", "", null)
+                        )
+                    );
                 }
-                return c;
+                return cd;
             }
         };
     }
