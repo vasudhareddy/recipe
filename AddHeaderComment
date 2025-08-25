@@ -3,7 +3,10 @@ package com.wellsfargo;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Recipe;
 import org.openrewrite.java.JavaIsoVisitor;
+import org.openrewrite.java.tree.Comment;
 import org.openrewrite.java.tree.J;
+
+import java.util.Collections;
 
 public class AddHeaderComment extends Recipe {
 
@@ -24,11 +27,10 @@ public class AddHeaderComment extends Recipe {
             public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext ctx) {
                 J.ClassDeclaration cd = super.visitClassDeclaration(classDecl, ctx);
 
-                // Add a comment at the start of the class
                 if (cd.getComments().isEmpty()) {
                     return cd.withComments(
-                        java.util.Collections.singletonList(
-                            new org.openrewrite.java.tree.Comment.SingleLine("// Added by AddHeaderComment", "", null)
+                        Collections.singletonList(
+                            Comment.buildSingleLine("// Added by AddHeaderComment")
                         )
                     );
                 }
