@@ -1,23 +1,21 @@
-package com.tst;
+package com.wellsfargo;
 
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Recipe;
 import org.openrewrite.java.JavaIsoVisitor;
-import org.openrewrite.java.tree.Comment;
 import org.openrewrite.java.tree.J;
-
-import java.util.Collections;
+import org.openrewrite.java.tree.Space;
 
 public class AddHeaderComment extends Recipe {
 
     @Override
     public String getDisplayName() {
-        return "Add header comment";
+        return "Add header-like text";
     }
 
     @Override
     public String getDescription() {
-        return "Always add a comment before the first class.";
+        return "Pretends to add a comment before each class by editing the whitespace prefix.";
     }
 
     @Override
@@ -27,12 +25,11 @@ public class AddHeaderComment extends Recipe {
             public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext ctx) {
                 J.ClassDeclaration cd = super.visitClassDeclaration(classDecl, ctx);
 
-                if (cd.getComments().isEmpty()) {
-                    return cd.withComments(
-                        Collections.singletonList(
-                            Comment.buildSingleLine("// Added by AddHeaderComment")
-                        )
-                    );
+                String prefix = cd.getPrefix().getWhitespace();
+                if (!prefix.contains("// Added by AddHeaderComment")) {
+                    cd = cd.withPrefix(Space.format(
+                        "// Added by AddHeaderComment\n" + prefix
+                    ));
                 }
                 return cd;
             }
