@@ -1,0 +1,39 @@
+AppMap vs. GitHub Copilot
+
+1. Core Purpose
+	•	AppMap → Observability + Understanding
+	•	Helps you see how your code actually runs (controllers → services → DB queries).
+	•	Turns runtime behavior into visual maps for debugging, docs, onboarding, and reviews.
+	•	GitHub Copilot → Code Generation
+	•	Helps you write code faster by suggesting snippets inline.
+	•	It doesn’t understand your app’s runtime execution or architecture.
+
+⸻
+
+2. Output
+	•	AppMap:
+	•	Sequence diagrams, dependency graphs, coverage maps, execution traces.
+	•	Explains why code behaves the way it does.
+	•	Copilot:
+	•	Autocompletes code, generates boilerplate, and provides function templates.
+	•	Explains only at a text level (not runtime visualization).
+
+⸻
+
+3. Use Cases
+	•	Where AppMap shines (better than Copilot):
+	•	Debugging: Visual trace of failing tests.
+	•	Onboarding: New devs “see” flows instead of reading code.
+	•	Code Reviews: Review behavior changes, not just diffs.
+	•	Architecture: Detect hidden dependencies, cycles, or data leaks.
+	•	Testing Insights: Show exactly what’s covered, and what’s not.
+	•	Where Copilot shines:
+	•	Writing repetitive boilerplate code.
+	•	Suggesting API usage examples.
+	•	Converting pseudocode into functions.
+
+⸻
+
+4. Developer Experience
+	•	AppMap: Works like a runtime X-ray → you record a test or run, then get a map.
+	•	Copilot: Works like a pair programmer → suggests what you might type next.
