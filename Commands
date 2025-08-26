@@ -1,0 +1,110 @@
+Perfect 👍 you’re talking about the Navie “@commands” in AppMap Chat (the AI assistant inside VS Code/JetBrains).
+These commands act like “modes” — each one changes how Navie responds.
+
+Here’s a cheat sheet of the main @commands and some Spring Boot–friendly prompt examples for each:
+
+⸻
+
+🔑 AppMap Chat @ Commands + Example Prompts
+
+1. @explain
+
+👉 Use when you want plain-English explanations of code or behavior.
+Prompt:
+
+@explain
+Explain how the OrderController in my Spring Boot app handles a POST /orders request, including controller → service → repository flow.
+
+
+⸻
+
+2. @test
+
+👉 Use for testing ideas, scenarios, or coverage gaps.
+Prompt:
+
+@test
+Suggest JUnit tests for PaymentService in my Spring Boot app, including edge cases like null inputs and failed external API calls.
+
+
+⸻
+
+3. @generate
+
+👉 Use to create code, configs, or documentation.
+Prompt:
+
+@generate
+Write a Spring Boot configuration snippet for connecting to Redis with @Cacheable support and show example usage in a service class.
+
+
+⸻
+
+4. @plan
+
+👉 Use to design an approach, refactor, or roadmap.
+Prompt:
+
+@plan
+Propose a migration plan to move my Spring Boot REST controllers from RestTemplate to WebClient, showing step-by-step changes.
+
+
+⸻
+
+5. @review
+
+👉 Use for code reviews or feedback on diffs.
+Prompt:
+
+@review
+Look at my new OrderService method and check if I’m handling transactions, exceptions, and logging properly. Suggest improvements.
+
+
+⸻
+
+6. @help
+
+👉 Use for debugging or “why is this broken?”
+Prompt:
+
+@help
+My Spring Boot test for UserService is failing with LazyInitializationException. Explain why this happens and suggest fixes.
+
+
+⸻
+
+7. @search
+
+👉 Use for finding specific code, flows, or references.
+Prompt:
+
+@search
+Find all Spring Data JPA repository methods that update or delete Order entities in my project.
+
+
+⸻
+
+8. @diagram (you already know this one, but adding for completeness)
+
+👉 Use for visual maps (sequence, dependency, flow).
+Prompt:
+
+@diagram
+Show a sequence diagram of /api/login request flow in my Spring Boot app: controller → service → JWT token generation → database check.
+
+
+⸻
+
+✅ This way:
+	•	@explain = plain-English summaries
+	•	@test = test cases & coverage
+	•	@generate = code & snippets
+	•	@plan = migration/refactor strategy
+	•	@review = code review feedback
+	•	@help = debugging assistance
+	•	@search = code discovery
+	•	@diagram = visual flows
+
+⸻
+
+Would you like me to package these into a one-page PDF cheat sheet (with command, description, and sample prompt) so you can keep it handy while working in AppMap?
