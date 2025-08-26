@@ -1,0 +1,21 @@
+Key Advantages of AppMap
+	•	Code → Visual Map
+Converts code into interactive maps, making architecture and flow easier to understand.
+	•	Faster Onboarding
+New developers quickly grasp system behavior without reading thousands of lines of code.
+	•	Automatic Documentation
+Generates up-to-date runtime diagrams, reducing manual documentation effort.
+	•	Debugging Simplified
+Shows execution flow, HTTP calls, DB queries, and dependencies in real time.
+	•	Improves Code Reviews
+Reviewers see architecture and behavior visually, not just raw code changes.
+	•	Architecture Validation
+Detects hidden dependencies, cycles, and violations of architectural rules.
+	•	Security & Compliance
+Helps identify unexpected data flows and risky dependencies early.
+	•	Testing Insights
+Visualizes which parts of code/tests execute, improving coverage and spotting gaps.
+	•	Tool Integrations
+Works inside VS Code, JetBrains IDEs, CI/CD pipelines, and GitHub for continuous insights.
+	•	Team Collaboration
+Maps are shareable across teams, aligning developers, architects, and testers.
