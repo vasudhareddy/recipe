@@ -1,0 +1,2 @@
+@diagram
+Show a visual map of the Order flow in my Spring Boot app: controller → service → repository. Include HTTP endpoints, service methods, and JPA/Hibernate queries.
