@@ -1,0 +1,75 @@
+Prompt Guide for AppMap Advantages
+
+1. Code → Visual Map
+
+📌 Prompt:
+“Create a diagram showing how AppMap converts raw source code into an interactive visual map with flows, classes, and dependencies.”
+
+⸻
+
+2. Faster Onboarding
+
+📌 Prompt:
+“Give me a before-and-after slide where new developers struggle with code vs. easily understanding workflows using AppMap.”
+
+⸻
+
+3. Automatic Documentation
+
+📌 Prompt:
+“Write a slide that shows how AppMap generates runtime diagrams automatically, replacing the need for manual documentation.”
+
+⸻
+
+4. Debugging Simplified
+
+📌 Prompt:
+“Generate a visual of an AppMap trace that highlights HTTP calls, DB queries, and function calls in sequence.”
+
+⸻
+
+5. Improves Code Reviews
+
+📌 Prompt:
+“Prepare a slide explaining how AppMap enhances code reviews by showing architectural flow instead of just Git diffs.”
+
+⸻
+
+6. Architecture Validation
+
+📌 Prompt:
+“Show an example slide of how AppMap detects hidden dependencies or cycles that violate clean architecture rules.”
+
+⸻
+
+7. Security & Compliance
+
+📌 Prompt:
+“Create a slide showing how AppMap can reveal unexpected data flows or risky dependencies for compliance checks.”
+
+⸻
+
+8. Testing Insights
+
+📌 Prompt:
+“Give me a visualization where AppMap shows which test cases execute which parts of the code, highlighting coverage gaps.”
+
+⸻
+
+9. Tool Integrations
+
+📌 Prompt:
+“Make a slide listing the AppMap integrations with VS Code, JetBrains, GitHub, and CI/CD pipelines.”
+
+⸻
+
+10. Team Collaboration
+
+📌 Prompt:
+“Write a slide about how AppMap maps can be shared across developers, testers, and architects for better alignment.”
+
+⸻
+
+⚡ Pro tip:
+If you want more than text (e.g., diagrams or infographics), add to your prompt:
+👉 “Also generate a simple diagram with arrows, boxes, or icons to visualize this.”
