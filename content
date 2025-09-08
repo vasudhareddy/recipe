@@ -1,0 +1,119 @@
+Advantages of AppMap & How to Use Them
+1. Code Understanding & Visualization
+
+Advantage: AppMap automatically records how your application runs (function calls, database queries, HTTP requests) and shows them as diagrams (sequence, dependency, flamegraph). This makes onboarding, debugging, and refactoring much easier.
+
+How to use:
+
+Run your app/tests with AppMap enabled → open .appmap.json → AppMap generates diagrams.
+
+In the chat, type:
+
+@diagram Generate a sequence diagram for the checkout flow
+
+
+It will visualize method calls, database queries, and external API calls.
+
+2. Plain-English Explanations
+
+Advantage: Converts complex call flows into simple summaries.
+
+How to use:
+
+In AppMap chat:
+
+@explain Summarize what happens when a user submits the login form
+
+
+You’ll get a step-by-step explanation in plain English (good for non-technical stakeholders too).
+
+3. Test Case Generation
+
+Advantage: Suggests unit/integration tests based on observed behavior. Ensures critical paths are covered.
+
+How to use:
+
+Run your app/test to generate .appmap.json.
+
+In the chat:
+
+@test Suggest JUnit 5 test cases for the payment flow
+
+
+You’ll get ready-to-use test skeletons with method calls and assertions.
+
+4. Code & Snippet Generation
+
+Advantage: Generate boilerplate or helper code from context.
+
+How to use:
+
+In chat:
+
+@generate Write a Spring Boot REST controller for Customer with GET and POST endpoints
+
+
+It will generate the code and reference dependencies it detects.
+
+5. Migration & Refactor Planning
+
+Advantage: Helps plan modernization (e.g., Java 11 → 17, Spring Boot 2 → 3, Unified → Orchestra).
+
+How to use:
+
+In chat:
+
+@plan Create a migration plan to move from Spring MVC controllers to Spring WebFlux handlers
+
+
+You’ll get a stepwise migration/refactor strategy.
+
+6. Code Review & Quality Feedback
+
+Advantage: Automated peer-review style feedback (style, complexity, best practices).
+
+How to use:
+
+In chat:
+
+@review Review this AppMap and suggest improvements in database query handling
+
+
+You’ll get flagged issues like N+1 queries, unused calls, etc.
+
+7. Debugging Assistance
+
+Advantage: Identifies bottlenecks, exceptions, performance issues.
+
+How to use:
+
+In chat:
+
+@help Diagnose why checkout process is slow
+
+
+AppMap will show slow DB queries, inefficient loops, or blocking calls.
+
+8. Code Search & Discovery
+
+Advantage: Semantic search across execution traces, not just text search.
+
+How to use:
+
+In chat:
+
+@search Find where the loanApproval API is called
+
+
+AppMap will highlight all occurrences across traces and code.
+
+📝 Summary Table
+Advantage	Example Prompt
+Visualization	@diagram Show sequence diagram of user registration
+Explanations	@explain Summarize login process
+Test Generation	@test Suggest JUnit 5 tests for account service
+Code Generation	@generate Create Spring Boot REST controller for Employee
+Migration Planning	@plan Migration steps from Spring Boot 2 to 3
+Code Review Feedback	@review Check for cyclomatic complexity issues
+Debugging Assistance	@help Debug NullPointerException in payment flow
+Code Search/Discovery	@search Where is sendEmail method used
