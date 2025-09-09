@@ -1,0 +1,1 @@
+I’ve added a few recipes that can help address some of the Sonar issues. These won’t cover everything, since ideally most of them should be handled during refactoring. I’ll include only the ones that are practical and make sense for our codebase
