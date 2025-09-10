@@ -1,0 +1,54 @@
+package com.example.rewrite;
+
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.java.JavaVisitor;
+import org.openrewrite.java.tree.J;
+import org.openrewrite.java.tree.JavaType;
+
+public class RenameLoggerFieldRecipe extends Recipe {
+
+    @Override
+    public String getDisplayName() {
+        return "Rename logger field to LOGGER";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Renames any field named 'logger' to 'LOGGER' and updates all its references.";
+    }
+
+    @Override
+    public JavaVisitor<ExecutionContext> getVisitor() {
+        return new JavaVisitor<ExecutionContext>() {
+            private JavaType.Variable loggerField; // store the field type for the renamed logger
+
+            @Override
+            public J.VariableDeclarations.NamedVariable visitVariable(J.VariableDeclarations.NamedVariable variable, ExecutionContext ctx) {
+                J.VariableDeclarations.NamedVariable v = (J.VariableDeclarations.NamedVariable) super.visitVariable(variable, ctx);
+
+                if ("logger".equals(v.getSimpleName())) {
+                    loggerField = v.getVariableType(); // ✅ capture field metadata
+                    return v.withName(v.getName().withSimpleName("LOGGER"));
+                }
+                return v;
+            }
+
+            @Override
+            public J.Identifier visitIdentifier(J.Identifier ident, ExecutionContext ctx) {
+                J.Identifier i = (J.Identifier) super.visitIdentifier(ident, ctx);
+
+                if ("logger".equals(i.getSimpleName()) && i.getFieldType() != null && loggerField != null) {
+                    // ✅ match by name + owner class
+                    if (i.getFieldType().getName().equals(loggerField.getName())
+                            && i.getFieldType().getOwner() != null
+                            && loggerField.getOwner() != null
+                            && i.getFieldType().getOwner().equals(loggerField.getOwner())) {
+                        return i.withSimpleName("LOGGER");
+                    }
+                }
+                return i;
+            }
+        };
+    }
+}
