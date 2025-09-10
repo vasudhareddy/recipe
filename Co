@@ -1,0 +1,58 @@
+package com.example.rewrite;
+
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.java.JavaTemplate;
+import org.openrewrite.java.JavaVisitor;
+import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.J;
+
+import java.util.List;
+
+public class MergeNestedIfsRecipe extends Recipe {
+
+    @Override
+    public String getDisplayName() {
+        return "Merge nested if statements (Sonar S1066)";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Collapses nested if-statements into a single if with combined conditions using &&.";
+    }
+
+    @Override
+    public JavaVisitor<ExecutionContext> getVisitor() {
+        return new JavaVisitor<ExecutionContext>() {
+
+            private final JavaTemplate mergedIfTemplate = JavaTemplate.builder(
+                    "if(#{any(boolean)} && #{any(boolean)}) #{any()}"
+            ).build();
+
+            @Override
+            public J visitIf(J.If ifStmt, ExecutionContext ctx) {
+                J.If i = (J.If) super.visitIf(ifStmt, ctx);
+
+                // only merge: if (cond) { if (cond2) { body } }
+                if (i.getThenPart() instanceof J.Block) {
+                    J.Block thenBlock = (J.Block) i.getThenPart();
+                    List<J> statements = thenBlock.getStatements();
+
+                    if (statements.size() == 1 && statements.get(0) instanceof J.If) {
+                        J.If nested = (J.If) statements.get(0);
+
+                        // build merged if: if (outer && inner) { innerBody }
+                        return mergedIfTemplate.apply(
+                                updateCursor(i),
+                                i.getCoordinates().replace(),
+                                i.getIfCondition().getTree(),
+                                nested.getIfCondition().getTree(),
+                                nested.getThenPart()
+                        );
+                    }
+                }
+                return i;
+            }
+        };
+    }
+}
