@@ -1,0 +1,55 @@
+package com.example.rewrite;
+
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.java.JavaVisitor;
+import org.openrewrite.java.tree.J;
+
+public class RenameLoggerFieldRecipe extends Recipe {
+
+    @Override
+    public String getDisplayName() {
+        return "Rename logger field to LOGGER";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Renames any field named 'logger' to 'LOGGER' and updates all references inside the same class.";
+    }
+
+    @Override
+    public JavaVisitor<ExecutionContext> getVisitor() {
+        return new JavaVisitor<ExecutionContext>() {
+            private boolean insideClassWithLogger = false;
+
+            @Override
+            public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext ctx) {
+                boolean prev = insideClassWithLogger;
+                insideClassWithLogger = classDecl.getBody().printTrimmed(getCursor()).contains("logger");
+                J.ClassDeclaration cd = (J.ClassDeclaration) super.visitClassDeclaration(classDecl, ctx);
+                insideClassWithLogger = prev;
+                return cd;
+            }
+
+            @Override
+            public J.VariableDeclarations.NamedVariable visitVariable(J.VariableDeclarations.NamedVariable variable, ExecutionContext ctx) {
+                J.VariableDeclarations.NamedVariable v = (J.VariableDeclarations.NamedVariable) super.visitVariable(variable, ctx);
+
+                if ("logger".equals(v.getSimpleName())) {
+                    return v.withName(v.getName().withSimpleName("LOGGER"));
+                }
+                return v;
+            }
+
+            @Override
+            public J.Identifier visitIdentifier(J.Identifier ident, ExecutionContext ctx) {
+                J.Identifier i = (J.Identifier) super.visitIdentifier(ident, ctx);
+
+                if (insideClassWithLogger && "logger".equals(i.getSimpleName())) {
+                    return i.withSimpleName("LOGGER");
+                }
+                return i;
+            }
+        };
+    }
+}
