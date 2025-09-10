@@ -1,0 +1,8 @@
+public class BoxingExample {
+    public static void main(String[] args) {
+        Integer i = 42;
+        Long l = Long.valueOf(i.longValue()); // 🚨 unnecessary unbox + rebox
+        Boolean b = Boolean.valueOf(Boolean.valueOf("true")); // 🚨 double box
+        System.out.println(l + " " + b);
+    }
+}
