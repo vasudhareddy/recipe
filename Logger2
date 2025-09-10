@@ -1,0 +1,56 @@
+package com.example.rewrite;
+
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.java.JavaVisitor;
+import org.openrewrite.java.tree.J;
+import org.openrewrite.java.tree.JavaType;
+
+import java.util.UUID;
+
+public class RenameLoggerFieldRecipe extends Recipe {
+
+    @Override
+    public String getDisplayName() {
+        return "Rename logger field to LOGGER";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Renames any field named 'logger' to 'LOGGER' and updates all its references.";
+    }
+
+    @Override
+    public JavaVisitor<ExecutionContext> getVisitor() {
+        return new JavaVisitor<ExecutionContext>() {
+            private UUID loggerId; // track the field's unique ID
+
+            @Override
+            public J.VariableDeclarations.NamedVariable visitVariable(J.VariableDeclarations.NamedVariable variable, ExecutionContext ctx) {
+                J.VariableDeclarations.NamedVariable v = (J.VariableDeclarations.NamedVariable) super.visitVariable(variable, ctx);
+
+                if (v.getSimpleName().equals("logger")) {
+                    JavaType.Variable varType = v.getVariableType();
+                    if (varType != null) {
+                        loggerId = varType.getId(); // ✅ store the ID of the logger field
+                    }
+                    return v.withName(v.getName().withSimpleName("LOGGER"));
+                }
+                return v;
+            }
+
+            @Override
+            public J.Identifier visitIdentifier(J.Identifier ident, ExecutionContext ctx) {
+                J.Identifier i = (J.Identifier) super.visitIdentifier(ident, ctx);
+
+                JavaType.Variable fieldType = i.getFieldType();
+                if ("logger".equals(i.getSimpleName())
+                        && fieldType != null
+                        && fieldType.getId().equals(loggerId)) {
+                    return i.withSimpleName("LOGGER");
+                }
+                return i;
+            }
+        };
+    }
+}
