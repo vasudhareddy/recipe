@@ -1,0 +1,86 @@
+package com.example.rewrite;
+
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.Recipe;
+import org.openrewrite.java.JavaTemplate;
+import org.openrewrite.java.JavaVisitor;
+import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.J;
+
+public class ReduceConditionalComplexityRecipe extends Recipe {
+
+    @Override
+    public String getDisplayName() {
+        return "Reduce conditional complexity (Sonar S1067)";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Extracts overly complex boolean conditions into a temporary variable when more than 4 conditional operators are used.";
+    }
+
+    @Override
+    public JavaVisitor<ExecutionContext> getVisitor() {
+        return new JavaVisitor<ExecutionContext>() {
+
+            private final JavaTemplate tempVarTemplate = JavaTemplate.builder(
+                    "boolean #{any(String)} = #{any(boolean)};"
+            ).build();
+
+            @Override
+            public J visitIf(J.If ifStmt, ExecutionContext ctx) {
+                J.If i = (J.If) super.visitIf(ifStmt, ctx);
+
+                Expression condition = i.getIfCondition().getTree();
+                int opCount = countConditionals(condition);
+
+                if (opCount > 4) {
+                    String tempVarName = "cond" + System.nanoTime();
+
+                    // ✅ Insert new boolean declaration before the if
+                    J.Block parentBlock = getCursor().firstEnclosing(J.Block.class);
+                    if (parentBlock != null) {
+                        parentBlock = parentBlock.withStatements(
+                                tempVarTemplate.apply(
+                                        updateCursor(parentBlock),
+                                        parentBlock.getCoordinates().firstStatement(),
+                                        tempVarName,
+                                        condition
+                                )
+                        );
+
+                        // ✅ Replace condition with a simple Identifier
+                        J.Identifier newCond = J.Identifier.build(
+                                randomId(),
+                                condition.getPrefix(),
+                                condition.getMarkers(),
+                                tempVarName,
+                                null
+                        );
+
+                        return i.withIfCondition(i.getIfCondition().withTree(newCond));
+                    }
+                }
+                return i;
+            }
+
+            private int countConditionals(Expression expr) {
+                if (expr instanceof J.Binary) {
+                    J.Binary bin = (J.Binary) expr;
+                    int left = countConditionals(bin.getLeft());
+                    int right = countConditionals(bin.getRight());
+                    if (bin.getOperator() == J.Binary.Type.And || bin.getOperator() == J.Binary.Type.Or) {
+                        return 1 + left + right;
+                    }
+                    return left + right;
+                } else if (expr instanceof J.Ternary) {
+                    J.Ternary tern = (J.Ternary) expr;
+                    return 1 + countConditionals(tern.getCondition())
+                            + countConditionals(tern.getTruePart())
+                            + countConditionals(tern.getFalsePart());
+                }
+                return 0;
+            }
+        };
+    }
+}
